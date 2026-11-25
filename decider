@@ -1,0 +1,6 @@
+#!/usr/bin/env python3
+import random
+import sys
+
+choices = [line.strip() for line in sys.stdin if line.strip()]
+print(random.choice(choices) + " にしよう！")
