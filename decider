@@ -1,6 +1,20 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 Yuta Sato
+# SPDX-License-Identifier: BSD-3-Clause
+
 import random
 import sys
 
+if len(sys.argv) >= 2:
+try:
+    random.seed(int(sys.argv[1]))
+except ValueError:
+    print("seed must be an integer", file=sys.stderr)
+    sys.exit(1)
+
 choices = [line.strip() for line in sys.stdin if line.strip()]
-print(random.choice(choices) + " にしよう！")
+if not choices:
+print("no input", file=sys.stderr)
+sys.exit(1)
+
+print(f"{random.choice(choices)} にしましょう！")
