@@ -41,9 +41,20 @@ def main():
     if sys.stdin.isatty():
         ans = input("メニューも選んであげようか？ (yes/no) > ").strip().lower()
         if ans in ("yes", "y"):
-            menu = input("どんなメニューにする？ > ").strip()
-            if menu:
-                print(f"{shop}の{menu}にしよう！")
+            print("メニュー候補を1行ずつ入力して、終わったら空行でEnter")
+            menus = []
+            while True:
+                try:
+                    m = input("> ").strip()
+                except EOFError:
+                    break
+                if not m:
+                    if menus:
+                        break
+                    continue
+                menus.append(m)
+            chosen_menu = random.choice(menus)
+            print(f"{shop}の{chosen_menu}にしよう！")
 
 
 if __name__ == "__main__":
