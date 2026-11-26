@@ -3,14 +3,19 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 ng () {
-    echo "${1}行目のテスト失敗"
-    res=1
+ echo "${1}行目のテスト失敗"
+ res=1
 }
 
 res=0
 
 ### NORMAL INPUT ###
-expected=$(python3 -c 'import random; random.seed(1); print(random.choice(["ラーメン", "カレー", "うどん"]) + " にしよう！")')
+expected=$(python3 - << 'PYEOF'
+import random
+random.seed(1)
+print(f'{random.choice(["ラーメン", "カレー", "うどん"])}にしよう！')
+PYEOF
+)
 out=$(printf "ラーメン\nカレー\nうどん\n" | ./decider 1)
 [ "$?" = 0 ] || ng "$LINENO"
 [ "${out}" = "${expected}" ] || ng "$LINENO"

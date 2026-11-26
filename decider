@@ -5,16 +5,46 @@
 import random
 import sys
 
-if len(sys.argv) >= 2:
-    try:
-        random.seed(int(sys.argv[1]))
-    except ValueError:
-        print("seed must be an integer", file=sys.stderr)
+
+def parse_seed(args):
+    if not args:
+        return None
+    if len(args) > 1 or not args[0].lstrip("-").isdigit():
+        sys.exit(1)
+    return int(args[0])
+
+
+def main():
+    seed = parse_seed(sys.argv[1:])
+    if seed is not None:
+        random.seed(seed)
+
+    if sys.stdin.isatty():
+        print("どのご飯屋さんと迷ってる？（1行ずつ入力して、終わったら空行でEnter）")
+        choices = []
+        while True:
+            line = input("> ").strip()
+            if not line:
+                if choices:
+                    break
+                continue
+            choices.append(line)
+    else:
+        choices = [line.strip() for line in sys.stdin.read().splitlines() if line.strip()]
+
+    if not choices:
         sys.exit(1)
 
-choices = [line.strip() for line in sys.stdin if line.strip()]
-if not choices:
-    print("no input", file=sys.stderr)
-    sys.exit(1)
+    shop = random.choice(choices)
+    print(f"{shop}にしよう！")
 
-print(f"{random.choice(choices)} にしよう！")
+    if sys.stdin.isatty():
+        ans = input("メニューも選んであげようか？ (yes/no) > ").strip().lower()
+        if ans in ("yes", "y"):
+            menu = input("どんなメニューにする？ > ").strip()
+            if menu:
+                print(f"{shop}の{menu}にしよう！")
+
+
+if __name__ == "__main__":
+    main()
